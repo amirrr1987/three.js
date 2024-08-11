@@ -7,6 +7,7 @@ import {
   MeshBasicMaterial,
   PerspectiveCamera,
   Scene,
+  Vector3,
   WebGLRenderer,
 } from "three";
 
@@ -36,7 +37,17 @@ scene.add(box);
 
 // Scale
 // box.scale.set(1,1,.1)
-box.rotation.x = 1;
+
+// Rotation
+box.rotation.x = Math.PI * 0.25;
+box.rotation.y = Math.PI * 0.25;
+box.rotation.z = Math.PI * 2.25;
+box.rotation.reorder('YXZ')
+
+box.quaternion.y = -1
+
+
+
 // box.quaternion.y = 2;
 
 // box.position.normalize();
@@ -57,6 +68,8 @@ camera.position.z = 3;
 camera.position.x = 1;
 camera.position.y = 1;
 scene.add(camera);
+
+camera.lookAt(new Vector3(3,3,3))
 
 // Renderer
 const renderer = new WebGLRenderer({
