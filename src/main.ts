@@ -3,6 +3,9 @@ import "./style.css";
 import {
   AxesHelper,
   BoxGeometry,
+  EdgesGeometry,
+  LineBasicMaterial,
+  LineSegments,
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
@@ -28,8 +31,24 @@ const scene = new Scene();
 
 // Box
 const boxGeometry = new BoxGeometry(1, 1, 1);
-const boxMaterial = new MeshBasicMaterial({ color: 0xffffff });
+const boxMaterial = new MeshBasicMaterial({ color: 0xffaa });
 const box = new Mesh(boxGeometry, boxMaterial);
+const boxEdges = new EdgesGeometry(boxGeometry);
+const boxLine = new LineSegments(
+  boxEdges,
+  new LineBasicMaterial({ color: 0xf00fff })
+);
+scene.add(boxLine);
+
+
+const geometry = new BoxGeometry(100, 100, 100);
+const edges = new EdgesGeometry(geometry);
+const line = new LineSegments(
+  edges,
+  new LineBasicMaterial({ color: 0xf00fff })
+);
+scene.add(line);
+
 
 // box.position.x = 1;
 box.position.set(0, 0, 0);
@@ -39,37 +58,29 @@ scene.add(box);
 // box.scale.set(1,1,.1)
 
 // Rotation
-box.rotation.x = Math.PI * 0.25;
-box.rotation.y = Math.PI * 0.25;
-box.rotation.z = Math.PI * 2.25;
-box.rotation.reorder('YXZ')
+// box.rotation.x = Math.PI * 0.25;
+// box.rotation.y = Math.PI * 0.25;
+// box.rotation.z = Math.PI * 2.25;
+// box.rotation.reorder("YXZ");
 
-box.quaternion.y = -1
-
-
+// box.quaternion.y = -1;
 
 // box.quaternion.y = 2;
 
 // box.position.normalize();
 
-
-// Axes Helper 
-const axesHelper = new AxesHelper(1);
-scene.add(axesHelper)
-
-
-
-
-
+// Axes Helper
+const axesHelper = new AxesHelper(50);
+scene.add(axesHelper);
 
 // Camera
 const camera = new PerspectiveCamera(75, sizes.width / sizes.height);
 camera.position.z = 3;
-camera.position.x = 1;
-camera.position.y = 1;
+// camera.position.x = 1;
+// camera.position.y = 1;
 scene.add(camera);
 
-camera.lookAt(new Vector3(3,3,3))
+camera.lookAt(box.position);
 
 // Renderer
 const renderer = new WebGLRenderer({
@@ -77,3 +88,10 @@ const renderer = new WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
+
+new OrbitControls(camera, renderer.domElement);
+const animate = () => {
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+};
+animate();
