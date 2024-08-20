@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { BoxGeometry, MeshBasicMaterial, Mesh, Scene, WebGLRenderer, PerspectiveCamera } from 'three';
+import { BoxGeometry, MeshBasicMaterial, Mesh, Scene, WebGLRenderer, PerspectiveCamera ,} from 'three';
 import { onMounted, ref, onBeforeUnmount } from 'vue';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -32,6 +32,25 @@ const initBox = () => {
   const boxMaterial = new MeshBasicMaterial({ color: 'red' });
   const box = new Mesh(boxGeometry, boxMaterial);
   scene.add(box);
+}
+const initBorder = () => {
+
+  const outlineMaterial = new THREE.MeshBasicMaterial({
+  color: ColorCodes.yellow as ColorRepresentation,
+});
+const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+  const curvedCube = new THREE.Mesh(geometry, material);
+
+const outlineGeometry = new THREE.EdgesGeometry(geometry);
+  const outline = new THREE.LineSegments(outlineGeometry, outlineMaterial);
+
+
+  const boxGeometry = new Ed(2,2,2);
+  const boxMaterial = new MeshBasicMaterial({ color: 'red' });
+  const box = new Mesh(boxGeometry, boxMaterial);
+  scene.add(box);
+  scene.add(curvedCube);
+  scene.add(outline);
 }
 
 const animate = (controls: OrbitControls) => {
