@@ -48,7 +48,7 @@ const initApp = () => {
 
   camera.position.z = 5
   renderer.setSize(sizes.width, sizes.height)
-  renderer.setPixelRatio(window.devicePixelRatio)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   canvas.value.appendChild(renderer.domElement)
 
   initBox()
