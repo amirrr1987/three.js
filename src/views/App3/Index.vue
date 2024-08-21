@@ -9,28 +9,16 @@ import {
   Mesh,
   Scene,
   WebGLRenderer,
-  PerspectiveCamera,
-  LineSegments,
-  EdgesGeometry,
-  ExtrudeGeometry,
-  type ColorRepresentation
+  PerspectiveCamera
 } from 'three'
-import { onMounted, ref, onBeforeUnmount } from 'vue'
+import { onMounted, ref, onBeforeUnmount, computed, reactive } from 'vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight
-}
-const aspect = sizes.width / sizes.height
+const sizes = reactive({ width: window.innerWidth, height: innerHeight })
+const aspect = computed(() => window.innerWidth / window.innerHeight)
 const canvas = ref<HTMLDivElement | null>(null)
 const scene = new Scene()
-const camera = new PerspectiveCamera(
-  75,
-  aspect,
-  0.1,
-  1000 // Adjusted near and far plane values
-)
+const camera = new PerspectiveCamera(75, aspect.value, 0.1, 1000)
 const renderer = new WebGLRenderer({
   antialias: true
 })
@@ -38,9 +26,6 @@ const renderer = new WebGLRenderer({
 const initControls = () => {
   const controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
-  controls.enablePan = true
-  // controls.dampingFactor = true;
-  // controls.enableZoom = true;
 
   return controls
 }
@@ -51,27 +36,10 @@ const initBox = () => {
   const box = new Mesh(boxGeometry, boxMaterial)
   scene.add(box)
 }
-const initBorder = () => {
-  const outlineMaterial = new MeshBasicMaterial({
-    color: ColorCodes.yellow as ColorRepresentation
-  })
-  const geometry = new ExtrudeGeometry(shape, extrudeSettings)
-  const curvedCube = new Mesh(geometry, material)
-
-  const outlineGeometry = new EdgesGeometry(geometry)
-  const outline = new LineSegments(outlineGeometry, outlineMaterial)
-
-  const boxGeometry = new Ed(2, 2, 2)
-  const boxMaterial = new MeshBasicMaterial({ color: 'red' })
-  const box = new Mesh(boxGeometry, boxMaterial)
-  scene.add(box)
-  scene.add(curvedCube)
-  scene.add(outline)
-}
 
 const animate = (controls: OrbitControls) => {
   requestAnimationFrame(() => animate(controls))
-  controls.update() // Only required if controls.enableDamping = true or controls.autoRotate = true
+  controls.update()
   renderer.render(scene, camera)
 }
 
@@ -80,6 +48,7 @@ const initApp = () => {
 
   camera.position.z = 5
   renderer.setSize(sizes.width, sizes.height)
+  renderer.setPixelRatio(window.devicePixelRatio)
   canvas.value.appendChild(renderer.domElement)
 
   initBox()
@@ -89,9 +58,12 @@ const initApp = () => {
 }
 const onResize = () => {
   if (!canvas.value) return
-  camera.aspect = aspect
+  sizes.width = window.innerWidth
+  sizes.height = window.innerHeight
+  camera.aspect = window.innerWidth / window.innerHeight
+
   camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(sizes.width, sizes.height)
 }
 onMounted(() => {
   initApp()

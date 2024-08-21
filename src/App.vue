@@ -12,6 +12,13 @@ nav {
   padding-inline: 3rem;
   padding-block: 1rem;
 }
+nav a{
+  text-decoration: none;
+  color: #212121;
+}
+nav a:hover{
+  color: #db3998;
+}
 </style>
 <template>
   <nav>
