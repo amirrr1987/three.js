@@ -66,9 +66,18 @@ const onResize = () => {
   renderer.setSize(sizes.width, sizes.height)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 }
+
+const fullScreen = window.document.fullscreenElement 
 onMounted(() => {
   initApp()
   window.addEventListener('resize', onResize)
+  window.addEventListener('dblclick', () => {
+    if (!fullScreen) {
+      canvas.value?.requestFullscreen()
+    } else {
+      document.exitFullscreen()
+    }
+  })
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
