@@ -3,88 +3,103 @@
 </template>
 
 <script setup lang="ts">
-import { BoxGeometry, MeshBasicMaterial, Mesh, Scene, WebGLRenderer, PerspectiveCamera ,} from 'three';
-import { onMounted, ref, onBeforeUnmount } from 'vue';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import {
+  BoxGeometry,
+  MeshBasicMaterial,
+  Mesh,
+  Scene,
+  WebGLRenderer,
+  PerspectiveCamera,
+  LineSegments,
+  EdgesGeometry,
+  ExtrudeGeometry,
+  type ColorRepresentation
+} from 'three'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-const canvas = ref<HTMLDivElement | null>(null);
-const scene = new Scene();
+const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight
+}
+const aspect = sizes.width / sizes.height
+const canvas = ref<HTMLDivElement | null>(null)
+const scene = new Scene()
 const camera = new PerspectiveCamera(
   75,
-  window.innerWidth / window.innerHeight,
-  0.1, 1000 // Adjusted near and far plane values
-);
+  aspect,
+  0.1,
+  1000 // Adjusted near and far plane values
+)
 const renderer = new WebGLRenderer({
   antialias: true
-});
+})
 
 const initControls = () => {
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
+  const controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableDamping = true
+  controls.enablePan = true
   // controls.dampingFactor = true;
   // controls.enableZoom = true;
 
-  return controls;
+  return controls
 }
 
 const initBox = () => {
-  const boxGeometry = new BoxGeometry(2,2,2);
-  const boxMaterial = new MeshBasicMaterial({ color: 'red' });
-  const box = new Mesh(boxGeometry, boxMaterial);
-  scene.add(box);
+  const boxGeometry = new BoxGeometry(2, 2, 2)
+  const boxMaterial = new MeshBasicMaterial({ color: 'red' })
+  const box = new Mesh(boxGeometry, boxMaterial)
+  scene.add(box)
 }
 const initBorder = () => {
+  const outlineMaterial = new MeshBasicMaterial({
+    color: ColorCodes.yellow as ColorRepresentation
+  })
+  const geometry = new ExtrudeGeometry(shape, extrudeSettings)
+  const curvedCube = new Mesh(geometry, material)
 
-  const outlineMaterial = new THREE.MeshBasicMaterial({
-  color: ColorCodes.yellow as ColorRepresentation,
-});
-const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-  const curvedCube = new THREE.Mesh(geometry, material);
+  const outlineGeometry = new EdgesGeometry(geometry)
+  const outline = new LineSegments(outlineGeometry, outlineMaterial)
 
-const outlineGeometry = new THREE.EdgesGeometry(geometry);
-  const outline = new THREE.LineSegments(outlineGeometry, outlineMaterial);
-
-
-  const boxGeometry = new Ed(2,2,2);
-  const boxMaterial = new MeshBasicMaterial({ color: 'red' });
-  const box = new Mesh(boxGeometry, boxMaterial);
-  scene.add(box);
-  scene.add(curvedCube);
-  scene.add(outline);
+  const boxGeometry = new Ed(2, 2, 2)
+  const boxMaterial = new MeshBasicMaterial({ color: 'red' })
+  const box = new Mesh(boxGeometry, boxMaterial)
+  scene.add(box)
+  scene.add(curvedCube)
+  scene.add(outline)
 }
 
 const animate = (controls: OrbitControls) => {
-  requestAnimationFrame(() => animate(controls));
-  controls.update(); // Only required if controls.enableDamping = true or controls.autoRotate = true
-  renderer.render(scene, camera);
+  requestAnimationFrame(() => animate(controls))
+  controls.update() // Only required if controls.enableDamping = true or controls.autoRotate = true
+  renderer.render(scene, camera)
 }
 
 const initApp = () => {
-  if (!canvas.value) return;
+  if (!canvas.value) return
 
-  camera.position.z = 5;
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  canvas.value.appendChild(renderer.domElement);
+  camera.position.z = 5
+  renderer.setSize(sizes.width, sizes.height)
+  canvas.value.appendChild(renderer.domElement)
 
-  initBox();
-  const controls = initControls();
+  initBox()
+  const controls = initControls()
 
-  animate(controls);
+  animate(controls)
 }
 const onResize = () => {
-  if (!canvas.value) return;
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  if (!canvas.value) return
+  camera.aspect = aspect
+  camera.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
 }
 onMounted(() => {
-  initApp();
-  window.addEventListener('resize', onResize);
-
-});
+  initApp()
+  window.addEventListener('resize', onResize)
+})
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize);
-});
+  window.removeEventListener('resize', onResize)
+})
 </script>
 
 <style>
