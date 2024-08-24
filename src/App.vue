@@ -25,6 +25,7 @@ nav a:hover{
     <RouterLink to="/">App1</RouterLink>
     <RouterLink to="/app2">App2</RouterLink>
     <RouterLink to="/app3">App3</RouterLink>
+    <RouterLink to="/app4">App4</RouterLink>
   </nav>
   <RouterView />
 </template>
