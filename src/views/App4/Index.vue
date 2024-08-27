@@ -42,8 +42,8 @@ const initControls = () => {
 }
 
 const initBox = () => {
-  const geometry = new BoxGeometry(2, 2, 2)
-  const material = new MeshBasicMaterial({ color: 'red' })
+  const geometry = new BoxGeometry(1, 1, 1, 2, 2, 2)
+  const material = new MeshBasicMaterial({ color: 'red', wireframe: true })
   const obj = new Mesh(geometry, material)
   return obj
 }
