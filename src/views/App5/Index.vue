@@ -81,7 +81,7 @@ const onResize = () => {
 
 onMounted(() => {
   initApp()
-  window.addEventListener('resize', onResize)
+  window.removeEventListener('resize', onResize)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', onResize)
