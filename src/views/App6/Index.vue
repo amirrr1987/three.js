@@ -7,17 +7,27 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import GUI from 'lil-gui'
+import gsap from 'gsap'
 
 const gui = new GUI()
 const debugObj = {
-  color: '#ffffff'
+  color: '#ffffff',
+  spin: () => {
+    gsap.to(sphere.rotation, {
+      y: sphere.rotation.y + Math.PI * 100,
+      x: sphere.rotation.y + Math.PI * 100,
+      duration: 1,
+      animation: 'zoomIn'
+    })
+  }
 }
 onMounted(() => {
-  gui.add(sphere.position, 'y', -5, 5, 0.1)
+  gui.add(sphere.position, 'y').min(-5).max(5).step(0.1).name('amir')
   gui.add(sphere.material, 'wireframe')
   gui.addColor(debugObj, 'color').onChange(() => {
     sphere.material.color.set(debugObj.color)
   })
+  gui.add(debugObj, 'spin')
 })
 
 const canvasContainer = ref<HTMLDivElement | null>(null)
@@ -32,7 +42,7 @@ const scene = new THREE.Scene()
  * Object
  */
 
-const geometry = new THREE.SphereGeometry(15, 32, 16)
+const geometry = new THREE.SphereGeometry(15, 10, 16)
 const material = new THREE.MeshBasicMaterial({ color: debugObj.color, wireframe: true })
 const sphere = new THREE.Mesh(geometry, material)
 scene.add(sphere)
@@ -92,7 +102,8 @@ const clock = new THREE.Clock()
 
 const animate = () => {
   const elapsedTime = clock.getElapsedTime()
-
+  // sphere.rotation.y = Math.sin(elapsedTime)
+  // sphere.rotation.x = Math.cos(elapsedTime)
   controls.update()
   renderer.render(scene, camera)
   window.requestAnimationFrame(animate)
