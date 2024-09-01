@@ -33,6 +33,11 @@ const router = createRouter({
       path: '/app6',
       name: 'App6',
       component: () => import('@/views/App6/Index.vue')
+    },
+    {
+      path: '/app7',
+      name: 'App7',
+      component: () => import('@/views/App7/Index.vue')
     }
   ]
 })
